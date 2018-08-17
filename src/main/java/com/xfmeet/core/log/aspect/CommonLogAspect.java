@@ -25,7 +25,7 @@ public class CommonLogAspect {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CommonLogAspect.class);
 
-    @Pointcut("@annotation(com.taoshunda.core.log.annotation.CommonLog)")
+    @Pointcut("@annotation(com.xfmeet.core.log.annotation.CommonLog)")
     public void serviceLog() {
     }
 
