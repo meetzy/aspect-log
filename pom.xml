@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.xfmeet</groupId>
-    <artifactId>tool-log</artifactId>
+    <artifactId>aspect-log</artifactId>
     <version>1.0</version>
     <description>one log aspect tool</description>
 
