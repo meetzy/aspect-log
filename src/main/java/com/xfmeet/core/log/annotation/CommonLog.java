@@ -12,9 +12,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface CommonLog {
     /**
-     * 默认log级别
+     * log level
      *
-     * @return
+     * @return  level
      */
     String value() default "INFO";
 }
