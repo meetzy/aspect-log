@@ -1,7 +1,7 @@
 package com.xfmeet.core.log;
 
 
-import com.xfmeet.core.log.aspect.ControllerLogAspect;
+import com.xfmeet.core.log.aspect.ServiceLogAspect;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -18,7 +18,7 @@ public class LogConfig {
 
     @Bean
     @ConditionalOnProperty(prefix = "core.log", name = "auto", havingValue = "true")
-    public ControllerLogAspect controllerLogAspect() {
-        return new ControllerLogAspect();
+    public ServiceLogAspect controllerLogAspect() {
+        return new ServiceLogAspect();
     }
 }

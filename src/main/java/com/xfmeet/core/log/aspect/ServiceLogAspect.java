@@ -20,9 +20,9 @@ import java.util.Arrays;
 @Aspect
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "core.log")
-public class ControllerLogAspect {
+public class ServiceLogAspect {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ControllerLogAspect.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceLogAspect.class);
     /**
      * 日志拦截级别
      */
