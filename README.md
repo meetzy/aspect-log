@@ -8,3 +8,16 @@
     默认不开启，需要配置core.log.auto=true进行开启。
 ## 日志类型
     DEBUG INFO WARN ERROR TRACE 不用区分大小写
+    
+---
+# One simple spring boot log tool by aspect
+
+## The first way to use it 
+    Use@CommonLog output method args and return, default level is info,
+    you can @CommonLog("level") custom log level.
+## The second way to use it
+    Direct output *.service.impl path all *Impl class public method args and return,
+    default not enbale,you can set core.log.auto=ture to enable. 
+## 日志类型
+    DEBUG INFO WARN ERROR TRACE  is case insensitive.
+
