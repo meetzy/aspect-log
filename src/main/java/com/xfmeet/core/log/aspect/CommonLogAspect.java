@@ -32,29 +32,29 @@ public class CommonLogAspect {
     @Before("serviceLog()")
     public void doBefore(JoinPoint joinPoint) {
         String level = getLogLevel(joinPoint);
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(String.format("className:{%s}", joinPoint.getTarget().getClass().getName()))
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(String.format("className:{%s}", joinPoint.getTarget().getClass().getName()))
                 .append(String.format("-->methodName:{%s}", joinPoint.getSignature().getName()))
                 .append(String.format("-->params:{%s}", Arrays.toString(joinPoint.getArgs())));
         level = level.toUpperCase();
-        CommonLogUtils.log(LOGGER, level, stringBuilder);
+        CommonLogUtils.log(LOGGER, level, stringBuffer);
     }
 
     @AfterReturning(returning = "object", pointcut = "serviceLog()")
     public void doAfter(JoinPoint joinPoint, Object object) {
         String level = getLogLevel(joinPoint);
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(String.format("className:{%s}", joinPoint.getTarget().getClass().getName()))
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(String.format("className:{%s}", joinPoint.getTarget().getClass().getName()))
                 .append(String.format("-->methodName:{%s}", joinPoint.getSignature().getName()))
                 .append(String.format("-->params:{%s}", JSON.toJSONString(object)));
         level = level.toUpperCase();
-        CommonLogUtils.log(LOGGER, level, stringBuilder);
+        CommonLogUtils.log(LOGGER, level, stringBuffer);
     }
 
     private String getLogLevel(JoinPoint joinPoint) {
-            MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-            Method method = signature.getMethod();
-            CommonLog log = method.getAnnotation(CommonLog.class);
-            return log.value();
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
+        CommonLog log = method.getAnnotation(CommonLog.class);
+        return log.value();
     }
 }

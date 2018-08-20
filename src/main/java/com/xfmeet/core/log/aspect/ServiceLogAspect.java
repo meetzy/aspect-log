@@ -43,21 +43,21 @@ public class ServiceLogAspect {
     @Before("serviceLog()")
     public void doBefore(JoinPoint joinPoint) {
         level = level.toUpperCase();
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(String.format("className:{%s}", joinPoint.getTarget().getClass().getName()))
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(String.format("className:{%s}", joinPoint.getTarget().getClass().getName()))
                 .append(String.format("-->methodName:{%s}", joinPoint.getSignature().getName()))
                 .append(String.format("-->params:{%s}", Arrays.toString(joinPoint.getArgs())));
-        CommonLogUtils.log(LOGGER, level, stringBuilder);
+        CommonLogUtils.log(LOGGER, level, stringBuffer);
     }
 
     @AfterReturning(returning = "object", pointcut = "serviceLog()")
     public void doAfter(JoinPoint joinPoint, Object object) {
         level = level.toUpperCase();
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(String.format("className:{%s}", joinPoint.getTarget().getClass().getName()))
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(String.format("className:{%s}", joinPoint.getTarget().getClass().getName()))
                 .append(String.format("-->methodName:{%s}", joinPoint.getSignature().getName()))
                 .append(String.format("-->params:{%s}", JSON.toJSONString(object)));
-        CommonLogUtils.log(LOGGER, level, stringBuilder);
+        CommonLogUtils.log(LOGGER, level, stringBuffer);
     }
 
 }
