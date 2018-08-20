@@ -18,6 +18,6 @@
 ## The second way to use it
     Direct output *.service.impl path all *Impl class public method args and return,
     default not enbale,you can set core.log.auto=ture to enable. 
-## 日志类型
+## Log type
     DEBUG INFO WARN ERROR TRACE  is case insensitive.
 
