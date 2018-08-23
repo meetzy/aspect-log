@@ -1,28 +1,28 @@
 package com.xfmeet.core.log.aspect;
 
 import com.alibaba.fastjson.JSON;
+import com.xfmeet.core.log.annotation.CommonLog;
 import com.xfmeet.core.log.common.CommonLogUtils;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.core.annotation.Order;
 
-import java.util.Arrays;
+import java.lang.reflect.Method;
 
 /**
  * @author meet
  */
 @Aspect
+@Order
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "core.log")
 public class ServiceLogAspect {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(ServiceLogAspect.class);
     /**
      * 日志拦截级别
      */
@@ -40,24 +40,26 @@ public class ServiceLogAspect {
     public void serviceLog() {
     }
 
-    @Before("serviceLog()")
-    public void doBefore(JoinPoint joinPoint) {
-        level = level.toUpperCase();
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(String.format("className:{%s}", joinPoint.getTarget().getClass().getName()))
-                .append(String.format("-->methodName:{%s}", joinPoint.getSignature().getName()))
-                .append(String.format("-->params:{%s}", Arrays.toString(joinPoint.getArgs())));
-        CommonLogUtils.log(LOGGER, level, stringBuffer);
+    @Around("serviceLog()")
+    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
+        CommonLog log = method.getAnnotation(CommonLog.class);
+        if (log != null) {
+            return joinPoint.proceed();
+        }
+        String className = joinPoint.getTarget().getClass().getCanonicalName();
+        String methodName = joinPoint.getSignature().getName();
+        CommonLogUtils.log(level, getLogString(className, methodName, joinPoint.getArgs()));
+        Object obj = joinPoint.proceed();
+        CommonLogUtils.log(level, getLogString(className, methodName, obj));
+        return obj;
     }
 
-    @AfterReturning(returning = "object", pointcut = "serviceLog()")
-    public void doAfter(JoinPoint joinPoint, Object object) {
-        level = level.toUpperCase();
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(String.format("className:{%s}", joinPoint.getTarget().getClass().getName()))
-                .append(String.format("-->methodName:{%s}", joinPoint.getSignature().getName()))
-                .append(String.format("-->params:{%s}", JSON.toJSONString(object)));
-        CommonLogUtils.log(LOGGER, level, stringBuffer);
+    private String getLogString(String className, String methodName, Object arg) {
+        return String.format("className:{%s}", className) +
+                String.format("-->methodName:{%s}", methodName) +
+                String.format("-->params:{%s}", JSON.toJSONString(arg));
     }
 
 }
