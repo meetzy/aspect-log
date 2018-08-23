@@ -6,9 +6,12 @@
 ## 第二种使用方式
     直接输出*.service.impl包下的所有*Impl类下所有public方法的入参出参，
     默认不开启，需要配置core.log.auto=true进行开启。
+    如果在Impl类的public方法上使用@CommonLog，将优先使用注解的日志级别，日志不会重复输出
 ## 日志类型
     DEBUG INFO WARN ERROR TRACE 不用区分大小写
     
+## 目前问题
+    如果在主类上使用日志输出，类名将会带有代理的标志，还没想好是否要处理掉
 ---
 # One simple spring boot log tool by aspect
 
