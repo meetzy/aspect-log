@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
 public class ServiceLogAspect {
 
     /**
-     * 日志拦截级别
+     * all log level
      */
     private String level = "info";
 
