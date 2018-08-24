@@ -17,11 +17,13 @@
            <artifactId>aspect-log</artifactId>
            <version>1.0.0</version>
     </dependency>
-    需要引入
+    
+ 需要引入
+ 
     <dependency>
            <groupId>org.springframework.boot</groupId>
            <artifactId>spring-boot-starter-aop</artifactId>
     </dependency>
     
-    *如果fastjson冲突请排除掉aspect-log中的fastjson引用*
+*如果fastjson冲突请排除掉aspect-log中的fastjson引用*
     
