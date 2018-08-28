@@ -11,5 +11,19 @@
     DEBUG INFO WARN ERROR TRACE 不用区分大小写
 ## 目前问题
     如果在主类Appcation上使用日志输出 类名将会带有代理的标志
-
-
+## 中心库引用
+    <dependency>
+           <groupId>com.xfmeet</groupId>
+           <artifactId>aspect-log</artifactId>
+           <version>1.0.0</version>
+    </dependency>
+    
+ 需要引入
+ 
+    <dependency>
+           <groupId>org.springframework.boot</groupId>
+           <artifactId>spring-boot-starter-aop</artifactId>
+    </dependency>
+    
+*如果fastjson冲突请排除掉aspect-log中的fastjson引用*
+    
