@@ -22,24 +22,24 @@ import java.lang.reflect.Method;
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "core.log")
 public class ServiceLogAspect {
-
+    
     /**
      * all log level
      */
     private String level = "info";
-
+    
     public String getLevel() {
         return level;
     }
-
+    
     public void setLevel(String level) {
         this.level = level;
     }
-
+    
     @Pointcut("execution(public * *..service.impl.*Impl.*(..))")
     public void serviceLog() {
     }
-
+    
     @Around("serviceLog()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
@@ -52,14 +52,16 @@ public class ServiceLogAspect {
         String methodName = joinPoint.getSignature().getName();
         CommonLogUtils.log(level, getLogString(className, methodName, joinPoint.getArgs()));
         Object obj = joinPoint.proceed();
-        CommonLogUtils.log(level, getLogString(className, methodName, obj));
+        if (method.getReturnType() != void.class) {
+            CommonLogUtils.log(level, getLogString(className, methodName, obj));
+        }
         return obj;
     }
-
+    
     private String getLogString(String className, String methodName, Object arg) {
         return String.format("className:{%s}", className) +
                 String.format("-->methodName:{%s}", methodName) +
                 String.format("-->params:{%s}", JSON.toJSONString(arg));
     }
-
+    
 }

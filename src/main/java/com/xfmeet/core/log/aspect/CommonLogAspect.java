@@ -19,7 +19,7 @@ import java.lang.reflect.Method;
  */
 @Aspect
 @Component
-@Order(2147483646)
+@Order(Integer.MAX_VALUE-1)
 public class CommonLogAspect {
 
 
@@ -29,12 +29,16 @@ public class CommonLogAspect {
 
     @Around("serviceLog()")
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
+        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
+        Method method = signature.getMethod();
         String className = joinPoint.getTarget().getClass().getCanonicalName();
-        String methodName = joinPoint.getSignature().getName();
-        String level = getLogLevel(joinPoint);
+        String methodName = method.getName();
+        String level = getLogLevel(method);
         CommonLogUtils.log(level, getLogString(className, methodName, joinPoint.getArgs()));
         Object obj = joinPoint.proceed();
-        CommonLogUtils.log(level, getLogString(className, methodName, obj));
+        if (method.getReturnType() != void.class) {
+            CommonLogUtils.log(level, getLogString(className, methodName, obj));
+        }
         return obj;
     }
 
@@ -44,9 +48,7 @@ public class CommonLogAspect {
                 String.format("-->params:{%s}", JSON.toJSONString(arg));
     }
 
-    private String getLogLevel(JoinPoint joinPoint) {
-        MethodSignature signature = (MethodSignature) joinPoint.getSignature();
-        Method method = signature.getMethod();
+    private String getLogLevel(Method method) {
         CommonLog log = method.getAnnotation(CommonLog.class);
         return log.value();
     }
