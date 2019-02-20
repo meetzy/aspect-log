@@ -1,9 +1,7 @@
 package com.xfmeet.core.log.aspect;
 
-import com.alibaba.fastjson.JSON;
 import com.xfmeet.core.log.annotation.CommonLog;
 import com.xfmeet.core.log.common.CommonLogUtils;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -19,7 +17,7 @@ import java.lang.reflect.Method;
  */
 @Aspect
 @Component
-@Order(Integer.MAX_VALUE-1)
+@Order(Integer.MIN_VALUE+1)
 public class CommonLogAspect {
 
 
@@ -31,25 +29,14 @@ public class CommonLogAspect {
     public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();
-        String className = joinPoint.getTarget().getClass().getCanonicalName();
+        CommonLog log = method.getAnnotation(CommonLog.class);
+        String className = CommonLogUtils.getClassName(joinPoint.getTarget().getClass(),log.type());
         String methodName = method.getName();
-        String level = getLogLevel(method);
-        CommonLogUtils.log(level, getLogString(className, methodName, joinPoint.getArgs()));
+        CommonLogUtils.log(log.value(), CommonLogUtils.getLogString(className, methodName, joinPoint.getArgs()));
         Object obj = joinPoint.proceed();
-        if (method.getReturnType() != void.class) {
-            CommonLogUtils.log(level, getLogString(className, methodName, obj));
+        if (method.getReturnType() != Void.TYPE) {
+            CommonLogUtils.log(log.value(), CommonLogUtils.getLogString(className, methodName, obj));
         }
         return obj;
-    }
-
-    private String getLogString(String className, String methodName, Object arg) {
-        return String.format("className:{%s}", className) +
-                String.format("-->methodName:{%s}", methodName) +
-                String.format("-->params:{%s}", JSON.toJSONString(arg));
-    }
-
-    private String getLogLevel(Method method) {
-        CommonLog log = method.getAnnotation(CommonLog.class);
-        return log.value();
     }
 }

@@ -1,5 +1,7 @@
 package com.xfmeet.core.log.annotation;
 
+import com.xfmeet.core.log.common.LogType;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -17,4 +19,6 @@ public @interface CommonLog {
      * @return  level
      */
     String value() default "INFO";
+    
+    String  type() default  LogType.SIMPLE;
 }

@@ -41,6 +41,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <version.java>1.8</version.java>
         <version.spring-boot>2.0.4.RELEASE</version.spring-boot>
+        <javadocExecutable>${java.home}/../bin/javadoc</javadocExecutable>
     </properties>
 
     <dependencies>
@@ -85,7 +86,6 @@
 
 
     <build>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

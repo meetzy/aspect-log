@@ -1,8 +1,8 @@
 package com.xfmeet.core.log.aspect;
 
-import com.alibaba.fastjson.JSON;
 import com.xfmeet.core.log.annotation.CommonLog;
 import com.xfmeet.core.log.common.CommonLogUtils;
+import com.xfmeet.core.log.common.LogType;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -18,7 +18,7 @@ import java.lang.reflect.Method;
  * @author meetzy
  */
 @Aspect
-@Order
+@Order(Integer.MIN_VALUE)
 @EnableConfigurationProperties
 @ConfigurationProperties(prefix = "core.log")
 public class ServiceLogAspect {
@@ -48,20 +48,14 @@ public class ServiceLogAspect {
         if (log != null) {
             return joinPoint.proceed();
         }
-        String className = joinPoint.getTarget().getClass().getCanonicalName();
-        String methodName = joinPoint.getSignature().getName();
-        CommonLogUtils.log(level, getLogString(className, methodName, joinPoint.getArgs()));
+        String className = CommonLogUtils.getClassName(joinPoint.getTarget().getClass(), LogType.SIMPLE);
+        String methodName = method.getName();
+        CommonLogUtils.log(level, CommonLogUtils.getLogString(className, methodName, joinPoint.getArgs()));
         Object obj = joinPoint.proceed();
-        if (method.getReturnType() != void.class) {
-            CommonLogUtils.log(level, getLogString(className, methodName, obj));
+        if (method.getReturnType() != Void.TYPE) {
+            CommonLogUtils.log(level, CommonLogUtils.getLogString(className, methodName, obj));
         }
         return obj;
-    }
-    
-    private String getLogString(String className, String methodName, Object arg) {
-        return String.format("className:{%s}", className) +
-                String.format("-->methodName:{%s}", methodName) +
-                String.format("-->params:{%s}", JSON.toJSONString(arg));
     }
     
 }
